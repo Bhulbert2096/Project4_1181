@@ -1,6 +1,8 @@
 package project4_hulbert_1181;
 
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -111,20 +113,26 @@ public class Project4_Hulbert_1181 extends Application
                    Optional<ButtonType> newResult = alert.showAndWait();
 
                 }
-                SortingAlgorithms sort = new SortingAlgorithms();
-                InputType inputType = new InputType(ntext,nBlock);
+                SortingAlgorithms sort = new SortingAlgorithms(ntext,nBlock);
+                
                 if(nChoice == 0){
-                nArray = inputType.AlreadySorted();
+                nArray = sort.AlreadySorted();
                 sort.selectionSort(nArray);
                 }
                 if(nChoice == 1){
-                    nArray = inputType.ReverseOrder();
-                    inputType.CreateSubArray(nArray);
-                   // inputType.CreateSubArrays(nArray);
+                    nArray = sort.ReverseOrder();
+                    sort.CreateSubArray(nArray);
+                   
+                    try {
+                        sort.mergeThreads(nNum);
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     sort.selectionSort(nArray);
                 }
                 if(nChoice == 2){
-                    nArray = inputType.RandomArray();
+                    nArray = sort.RandomArray();
                     sort.selectionSort(nArray);
                 }
             }
@@ -140,18 +148,18 @@ public class Project4_Hulbert_1181 extends Application
                    Optional<ButtonType> newResult = alert.showAndWait();
 
                 }
-                SortingAlgorithms sort = new SortingAlgorithms();
-                InputType inputType = new InputType(ntext,nBlock);
+                SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
+                
                 if(nChoice == 0){
-                nArray = inputType.AlreadySorted();
+                nArray = sort.AlreadySorted();
                 sort.bubbleSort(nArray);
                 }
                 if(nChoice == 1){
-                    nArray = inputType.ReverseOrder();
+                    nArray = sort.ReverseOrder();
                     sort.bubbleSort(nArray);
                 }
                 if(nChoice == 2){
-                    nArray = inputType.RandomArray();
+                    nArray = sort.RandomArray();
                     sort.bubbleSort(nArray);
                 }
             }
@@ -167,18 +175,18 @@ public class Project4_Hulbert_1181 extends Application
                    Optional<ButtonType> newResult = alert.showAndWait();
 
                 }
-                SortingAlgorithms sort = new SortingAlgorithms();
-                InputType inputType = new InputType(ntext,nBlock);
+                SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
+                
                 if(nChoice == 0){
-                nArray = inputType.AlreadySorted();
+                nArray = sort.AlreadySorted();
                 sort.insertionSort(nArray);
                 }
                 if(nChoice == 1){
-                    nArray = inputType.ReverseOrder();
+                    nArray = sort.ReverseOrder();
                     sort.insertionSort(nArray);
                 }
                 if(nChoice == 2){
-                    nArray = inputType.RandomArray();
+                    nArray = sort.RandomArray();
                     sort.insertionSort(nArray);
                 }
             }
@@ -194,20 +202,20 @@ public class Project4_Hulbert_1181 extends Application
                    Optional<ButtonType> newResult = alert.showAndWait();
 
                 }
-                SortingAlgorithms sort = new SortingAlgorithms();
-                InputType inputType = new InputType(ntext,nBlock);
+                SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
+                
                 if(nChoice == 0){
-                nArray = inputType.AlreadySorted();
-                sort.insertionSort(nArray);
+                nArray = sort.AlreadySorted();
+                sort.quicksort(0, nArray.length-1, nArray);
                 }
                 if(nChoice == 1){
-                    nArray = inputType.ReverseOrder();
-                    sort.insertionSort(nArray);
+                    nArray = sort.ReverseOrder();
+                    sort.quicksort(0, nArray.length-1, nArray);
                 }
                 if(nChoice == 2){
-                    nArray = inputType.RandomArray();
+                    nArray = sort.RandomArray();
                     sort.sort(nArray);
-                    sort.quicksort(nNum, ntext, nArray);
+                    //sort.quicksort(0, nArray.length-1, nArray);
                 }
             }
              if(nNum == -1){
