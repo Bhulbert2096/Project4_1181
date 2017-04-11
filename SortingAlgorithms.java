@@ -39,7 +39,7 @@ public class SortingAlgorithms
     //use one thread per subarray
     //have a for loop create how many threads you need based on number of subarrays you have
     //pivot left high moves first 
-    public void selectionSort(int[] nArray){
+    public int[] selectionSort(int[] nArray){
         int nMin = 0;
         int temp = 0;
         for (int i = 0; i < nArray.length-1; i++)
@@ -59,6 +59,7 @@ public class SortingAlgorithms
             System.out.println(Arrays.toString(nArray));
   
         }
+        return nArray;
         
     }
     
@@ -191,54 +192,57 @@ public class SortingAlgorithms
     }
     public int[] mergeThreads(int nSortingType) throws InterruptedException{
         int nNum = qArray.size();
-        int[] arr = null;
-        ArrayList<Thread> thread = new ArrayList<>();
-//        Thread Thread1 = new Thread(new SelectionSortThread(nInputSize, nBlockSize));
-        Thread Thread2 = new Thread(new BubbleSortThread(nInputSize, nBlockSize));
-        Thread Thread3 = new Thread(new InsertionSortThread(nInputSize, nBlockSize));
-        Thread Thread4 = new Thread(new QuickSortThread(nInputSize, nBlockSize));
+//        int[] arr = null;
+//        ArrayList<Thread> thread = new ArrayList<>();
+////        Thread Thread1 = new Thread(new SelectionSortThread(nInputSize, nBlockSize));
+//        Thread Thread2 = new Thread(new BubbleSortThread(nInputSize, nBlockSize));
+//        Thread Thread3 = new Thread(new InsertionSortThread(nInputSize, nBlockSize));
+//        Thread Thread4 = new Thread(new QuickSortThread(nInputSize, nBlockSize));
         
        // thread.add(Thread1);
-        thread.add(Thread2);
-        thread.add(Thread3);
-        thread.add(Thread4);
+//        thread.add(Thread2);
+//        thread.add(Thread3);
+//        thread.add(Thread4);
         
         while(qArray.size() > 1){
             switch(nSortingType){
                 case 0:
                     for (int i = 0; i < nNum; i++) {
-                      Thread Thread1 = new Thread(new SelectionSortThread(qArray.poll(),nInputSize, nBlockSize));
-                        thread.get(0).start();
+                        
+                      Thread Thread1 = new Thread(new SelectionSortThread(qArray.poll(),qArray.poll(),nInputSize, nBlockSize));
+                        Thread1.start();
+                     for (int j = 0; j < i; j++) {
+                        Thread1.join();
                     }
-                    for (int i = 0; i < nNum; i++) {
-                        thread.get(0).join();
+                       
                     }
+                    
                 case 1:
                     for (int i = 0; i < nNum; i++) {
                         qArray.poll();
                         qArray.poll();
-                        thread.get(1).start();
+                        //thread.get(1).start();
                     }
                     for (int i = 0; i < nNum; i++) {
-                        thread.get(1).join();
+                        //thread.get(1).join();
                     }
                 case 2:
                     for (int i = 0; i < nNum; i++) {
                         qArray.poll();
                         qArray.poll();
-                        thread.get(2).start();
+                        //thread.get(2).start();
                     }
                     for (int i = 0; i < nNum; i++) {
-                        thread.get(2).join();
+                        //hread.get(2).join();
                     }
                 case 3:
                     for (int i = 0; i < nNum; i++) {
                         qArray.poll();
                         qArray.poll();
-                        thread.get(3).start();
+                        //thread.get(3).start();
                     }
                     for (int i = 0; i < nNum; i++) {
-                        thread.get(3).join();
+                        //thread.get(3).join();
                     }
             }
         
@@ -246,45 +250,12 @@ public class SortingAlgorithms
         return qArray.poll();
     }
     public void CreateSubArray(int[] nArray){
-        int nBlockStart = 0;
-        int arrayCount = 0;
         
-        for (int i = 0; i < nArray.length; i++)
-        {
-            
-            if(((i+1) % nBlockSize) == 0){
-                int[] arr = new int[nBlockSize];
-                arrayCount = 0;
-            for (int j = nBlockStart; j <= i; j++)
-                {
-                    
-                    
-                    int temp = nArray[j];
-                     arr[arrayCount]= nArray[j];
-                    arr[arrayCount] = temp;
-                    arrayCount++;
-                    
-                     
-                }
-                if(nBlockStart == 9){
-                     int temp = nArray[nBlockStart];
-                     arr[arrayCount]= nArray[nBlockStart];
-                    arr[arrayCount] = temp;
-                    }
-                qArray.offer(arr);
-                nBlockStart = 0;
-                nBlockStart+=i+1;
-            }
-//            if () {
-//                   int temp = nArray[i];
-//                   arr[arrayCount] = nArray[i];
-//                   arr[arrayCount] = temp;
-//                   qArray.offer(arr);
-//                }
-            
-            
+        for (int i = 0; i < nArray.length; i+=nBlockSize) {
+            int[] chunk = Arrays.copyOfRange(nArray, i, Math.min(nArray.length, i + nBlockSize));
+            qArray.offer(chunk);
         }
-        qArray.toString();
+        
     }
     
     
