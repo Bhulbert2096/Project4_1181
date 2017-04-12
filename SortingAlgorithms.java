@@ -39,7 +39,8 @@ public class SortingAlgorithms
     //use one thread per subarray
     //have a for loop create how many threads you need based on number of subarrays you have
     //pivot left high moves first 
-    public int[] selectionSort(int[] nArray){
+    public synchronized int[] selectionSort(int[] nArray){
+        System.out.println("Got here");
         int nMin = 0;
         int temp = 0;
         for (int i = 0; i < nArray.length-1; i++)
@@ -192,57 +193,49 @@ public class SortingAlgorithms
     }
     public int[] mergeThreads(int nSortingType) throws InterruptedException{
         int nNum = qArray.size();
-//        int[] arr = null;
-//        ArrayList<Thread> thread = new ArrayList<>();
-////        Thread Thread1 = new Thread(new SelectionSortThread(nInputSize, nBlockSize));
-//        Thread Thread2 = new Thread(new BubbleSortThread(nInputSize, nBlockSize));
-//        Thread Thread3 = new Thread(new InsertionSortThread(nInputSize, nBlockSize));
-//        Thread Thread4 = new Thread(new QuickSortThread(nInputSize, nBlockSize));
-        
-       // thread.add(Thread1);
-//        thread.add(Thread2);
-//        thread.add(Thread3);
-//        thread.add(Thread4);
-        
-        while(qArray.size() > 1){
+         while(qArray.size() > 1){
             switch(nSortingType){
                 case 0:
-                    for (int i = 0; i < nNum; i++) {
+                    for (int i = 0; i < nNum/2; i++) {
                         
-                      Thread Thread1 = new Thread(new SelectionSortThread(qArray.poll(),qArray.poll(),nInputSize, nBlockSize));
+                      Thread Thread1 = new Thread(new SelectionSortThread(qArray.poll(),qArray.poll(),nInputSize,nBlockSize));
                         Thread1.start();
                      for (int j = 0; j < i; j++) {
                         Thread1.join();
                     }
-                       
+                     //this will get the first item in the merge array queue
+                        
                     }
                     
                 case 1:
-                    for (int i = 0; i < nNum; i++) {
-                        qArray.poll();
-                        qArray.poll();
-                        //thread.get(1).start();
+                     for (int i = 0; i < nNum/2; i++) {
+                        
+                      Thread Thread2 = new Thread(new BubbleSortThread(qArray.poll(),qArray.poll(),nInputSize,nBlockSize));
+                        Thread2.start();
+                     for (int j = 0; j < i; j++) {
+                        Thread2.join();
                     }
-                    for (int i = 0; i < nNum; i++) {
-                        //thread.get(1).join();
+                       
                     }
                 case 2:
-                    for (int i = 0; i < nNum; i++) {
-                        qArray.poll();
-                        qArray.poll();
-                        //thread.get(2).start();
-                    }
-                    for (int i = 0; i < nNum; i++) {
-                        //hread.get(2).join();
+                   for (int i = 0; i < nNum/2; i++) {
+                        
+                      Thread Thread3 = new Thread(new InsertionSortThread(qArray.poll(),qArray.poll(),nInputSize,nBlockSize));
+                        Thread3.start();
+                     for (int j = 0; j < i; j++) {
+                        Thread3.join();
+                    }  
+                     
                     }
                 case 3:
-                    for (int i = 0; i < nNum; i++) {
-                        qArray.poll();
-                        qArray.poll();
-                        //thread.get(3).start();
+                    for (int i = 0; i < nNum/2; i++) {
+                        
+                      Thread Thread4 = new Thread(new QuickSortThread(qArray.poll(),qArray.poll(),nInputSize,nBlockSize));
+                        Thread4.start();
+                     for (int j = 0; j < i; j++) {
+                        Thread4.join();
                     }
-                    for (int i = 0; i < nNum; i++) {
-                        //thread.get(3).join();
+                       
                     }
             }
         

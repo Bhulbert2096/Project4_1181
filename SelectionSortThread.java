@@ -28,20 +28,30 @@ public class SelectionSortThread extends SortingAlgorithms implements Runnable
     public SelectionSortThread(int nInputSize, int nBlockSize) {
         super(nInputSize, nBlockSize);
     }
+
+    public Queue<int[]> getqMergedArray() {
+        return qMergedArray;
+    }
+
+    public void setqMergedArray(Queue<int[]> qMergedArray) {
+        this.qMergedArray = qMergedArray;
+    }
+    
    
     @Override
     public void run()
     {
-        if(arr.length == 0 && arr2.length !=0){
-            qMergedArray.offer(arr2);
-            return;
-        }
-        if(arr2.length == 0 && arr.length != 0){
-            qMergedArray.offer(arr);
-            return;
-        }
-        if(arr.length != 0 && arr2.length != 0){
-       int[] mergedArray = new int[arr.length + arr2.length];
+        int[] mergedArray = new int[arr.length + arr2.length];
+//        if(arr.length == 0 && arr2.length !=0){
+//            
+//            return;
+//        }
+//        if(arr2.length == 0 && arr.length != 0){
+//            //qMergedArray.offer(arr);
+//            return;
+//        }
+        //if(arr.length != 0 && arr2.length != 0){
+       
         
         int count = 0;
         for (int i = 0; i < arr.length; i++) {
@@ -52,10 +62,13 @@ public class SelectionSortThread extends SortingAlgorithms implements Runnable
             mergedArray[count] = arr2[j];
             count++;
             }
-         qMergedArray.offer(mergedArray);
+        super.selectionSort(mergedArray);
+         //qMergedArray.offer(mergedArray);
          
         }
-        System.out.println(Arrays.toString(qMergedArray.peek()));
+        
+        //System.out.println(Arrays.toString(qMergedArray.peek()));
     }
+   
     
-}
+//}

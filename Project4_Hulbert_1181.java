@@ -129,7 +129,7 @@ public class Project4_Hulbert_1181 extends Application
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    sort.selectionSort(nArray);
+                    //sort.selectionSort(nArray);
                 }
                 if(nChoice == 2){
                     nArray = sort.RandomArray();
