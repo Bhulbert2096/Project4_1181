@@ -122,9 +122,10 @@ public class Project4_Hulbert_1181 extends Application
                 if(nChoice == 1){
                     nArray = sort.ReverseOrder();
                     sort.CreateSubArray(nArray);
+                    
                    
                     try {
-                        sort.mergeThreads(nNum);
+                        sort.SortChunks(nNum);
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
@@ -214,7 +215,7 @@ public class Project4_Hulbert_1181 extends Application
                 }
                 if(nChoice == 2){
                     nArray = sort.RandomArray();
-                    sort.sort(nArray);
+                   // sort.sort(nArray);
                     //sort.quicksort(0, nArray.length-1, nArray);
                 }
             }
