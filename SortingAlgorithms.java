@@ -1,5 +1,6 @@
 package project4_hulbert_1181;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -16,21 +17,15 @@ public class SortingAlgorithms {
     private Queue<int[]> qArray = new LinkedList<>();
     private int[] nArray;
     private Queue<int[]> qSortedArray = new LinkedList<>();
+    private ArrayList<int[]> MergedArray = new ArrayList<>();
     
 
     public SortingAlgorithms(int nInputSize, int nBlockSize) {
         this.nInputSize = nInputSize;
         this.nBlockSize = nBlockSize;
     }
-
-    
-
-    //use merge sort to get the blocks of threads together
-    //use one thread per subarray
-    //have a for loop create how many threads you need based on number of subarrays you have
-    //pivot left high moves first 
     public synchronized int[] selectionSort(int[] nArray) {
-        System.out.println("Got here");
+       
 
         int nMin = 0;
         int temp = 0;
@@ -49,7 +44,7 @@ public class SortingAlgorithms {
             
             }
             
-            System.out.println(Arrays.toString(nArray));
+            
             notifyAll();
         }
         
@@ -57,7 +52,11 @@ public class SortingAlgorithms {
         return nArray;
     }
 
-    public void insertionSort(int[] nArray) {
+    public void ObtainTheMergedQueueFromAThread(Queue<int[]> mergedQueue){
+        qSortedArray = mergedQueue;
+       
+    }
+    public synchronized int[] insertionSort(int[] nArray) {
         for (int i = 1; i < nArray.length; i++) {
             int temp;
             for (int k = i; k > 0; k--) {
@@ -67,13 +66,13 @@ public class SortingAlgorithms {
                     nArray[k - 1] = temp;
 
                 }
-                System.out.println(Arrays.toString(nArray));
             }
 
         }
+        return nArray;
     }
 
-    public void bubbleSort(int[] nArray) {
+    public synchronized int[] bubbleSort(int[] nArray) {
 
         int temp = 0;
 
@@ -85,14 +84,13 @@ public class SortingAlgorithms {
                     nArray[j - 1] = nArray[j];
                     nArray[j] = temp;
                 }
-                System.out.println(Arrays.toString(nArray));
             }
 
         }
-
+        return nArray;
     }
 
-    public void quicksort(int nLow, int nHigh, int[] nArray) {
+    public synchronized void quicksort(int nLow, int nHigh, int[] nArray) {
         int i = nLow;
         int k = nHigh;
         //this will give me the middle of the high and the low values
@@ -126,7 +124,7 @@ public class SortingAlgorithms {
 
     }
 
-    public void swap(int[] arr, int low, int high) {
+    public synchronized void swap(int[] arr, int low, int high) {
         int temp = arr[low];
         arr[low] = arr[high];
         arr[high] = temp;
@@ -168,11 +166,9 @@ public class SortingAlgorithms {
         return nArray;
     }
     
-    public synchronized void SortChunks(int nSortingType) throws InterruptedException{
-       // Then, “chunk” the array into the desired block size and pass each chunk to a thread that
-        //sorts the chunk into ascending order using the algorithm chosen by the user
-        //this needs to create a thread to sort one chunk then once the chunk
-        //I know the queue contains each chunk so I need to take one chunk out and sort that chunk
+    public synchronized void SortChunks2(int nSortingType) throws InterruptedException{
+       
+      
         int nQueueSize = qArray.size();
         
         while(qArray.size() > 0){
@@ -181,54 +177,77 @@ public class SortingAlgorithms {
                    Thread thread1 = new Thread(new SelectionSortThread( qArray.poll(), nInputSize, nBlockSize, qSortedArray));
                    thread1.start();
                    thread1.join();
-                   
-                   break;
+                    break;
             }
         }
-
+         System.out.println("Got here:"+Arrays.toString(qSortedArray.peek()));
+    }
+    
+   
+    public synchronized int[] MergeArray(int[] array1, int[] array2){
+        int size = array1.length + array2.length;
+        //this is the array that we will be merging the halves into
+        int[] mergedArray = new int[size];
+        //first element to consider
+        int nFirst = 0;
+        //second element to consider in the array
+        int nSecond = 0;
+        //the next open spot left in the merge array
+        int j = 0;
+        
+        while(nFirst < array1.length && nSecond < array2.length){
+            if(array1[nFirst] < array2[nSecond]){
+                mergedArray[j] = array1[nFirst];
+                nFirst++;
+            }
+            else{
+                mergedArray[j] = array2[nSecond];
+                nSecond++;
+            }
+            j++;
+            }
+        
+       
+        System.arraycopy(array1,nFirst,mergedArray,j,array1.length - nFirst);
+        
+        System.arraycopy(array2,nSecond,mergedArray,j,array2.length - nSecond);
+        return mergedArray;
+    }
+    public synchronized void MergeThreadQueue(int nSortingType) throws InterruptedException{
+        while(qSortedArray.size() !=1){
+            Thread thread1 = new Thread(new MergeThread(qSortedArray.poll(),qSortedArray.poll(), nInputSize, nBlockSize,qSortedArray));
+            thread1.start();
+            thread1.join();    
+            }
+        System.out.println("FINAL:"+Arrays.toString(qSortedArray.poll()));
     }
 
-    public int[] CreateThreads(int nSortingType) throws InterruptedException {
+    public synchronized void SortChunks(int nSortingType) throws InterruptedException {
         int nNum = qArray.size();
         int count = 0;
         while (qArray.size() > 1) {
             switch (nSortingType) {
                 case 0:
-                    //create the sub arrays then sort one thread per subarray to do the sorting threads to sort and then
-                    //then have another thread to merge
-                    
-                    for (int i = 0; i <= nNum; i++) {
-                        int[] Arraypoll1 = qArray.poll();
-                        int[] Arraypoll2 = qArray.poll();
-                        if (Arraypoll1 != null && Arraypoll2 != null) {
-
-                           // Thread Thread1 = new Thread(new SelectionSortThread(Arraypoll1, Arraypoll2, nInputSize, nBlockSize,count));
-                            //Thread1.start();
-                            
+                   for (int i = 0; i < nNum; i++) {
+                            Thread Thread1 = new Thread(new SelectionSortThread(qArray.poll(), nInputSize, nBlockSize,qSortedArray));
+                            Thread1.start();
                             for (int j = 0; j < i; j++) {
-                             
-                               // Thread1.join();
-                                
+                                Thread1.join();
                             }
                         }
-
-                    }
                     break;
                 case 1:
-                    for (int i = 0; i < nNum / 2; i++) {
-
-                        Thread Thread2 = new Thread(new BubbleSortThread(qArray.poll(), qArray.poll(), nInputSize, nBlockSize));
-                        Thread2.start();
-                        for (int j = 0; j < i; j++) {
-                            Thread2.join();
+                    for (int i = 0; i < nNum; i++) {
+                            Thread Thread1 = new Thread(new BubbleSortThread(qArray.poll(), nInputSize, nBlockSize,qSortedArray));
+                            Thread1.start();
+                            for (int j = 0; j < i; j++) {
+                            Thread1.join();
+                            }
                         }
-
-                    }
                     break;
                 case 2:
-                    for (int i = 0; i < nNum / 2; i++) {
-
-                        Thread Thread3 = new Thread(new InsertionSortThread(qArray.poll(), qArray.poll(), nInputSize, nBlockSize));
+                    for (int i = 0; i < nNum; i++) {
+                        Thread Thread3 = new Thread(new InsertionSortThread(qArray.poll(), nInputSize, nBlockSize,qSortedArray));
                         Thread3.start();
                         for (int j = 0; j < i; j++) {
                             Thread3.join();
@@ -237,9 +256,8 @@ public class SortingAlgorithms {
                     }
                     break;
                 case 3:
-                    for (int i = 0; i < nNum / 2; i++) {
-
-                        Thread Thread4 = new Thread(new QuickSortThread(qArray.poll(), qArray.poll(), nInputSize, nBlockSize));
+                    for (int i = 0; i < nNum; i++) {
+                        Thread Thread4 = new Thread(new QuickSortThread(qArray.poll(), nInputSize, nBlockSize,qSortedArray));
                         Thread4.start();
                         for (int j = 0; j < i; j++) {
                             Thread4.join();
@@ -250,7 +268,6 @@ public class SortingAlgorithms {
             }
 
         }
-        return qArray.poll();
     }
 
     public void CreateSubArray(int[] nArray) {

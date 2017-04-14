@@ -15,42 +15,26 @@ import java.util.Queue;
  */
 public class InsertionSortThread extends SortingAlgorithms implements Runnable
 {
-    private int[] arr;
-    private Queue<int[]> qMergedArray = new LinkedList<>();
+     private int[] nArray;
     private int[] arr2;
+    private Queue<int[]>qMergedArray = new LinkedList<>();
+    private int nArraySize;
+    private int counter;
     
-    public InsertionSortThread(int[] nArray,int[] nArray2,int nInputSize, int nBlockSize) {
+    public InsertionSortThread(int[] array, int nInputSize, int nBlockSize, Queue<int[]> queue) {
         super(nInputSize, nBlockSize);
-        this.arr = nArray;
-        this.arr2 = nArray2;
+        this.nArray = array;
+        this.qMergedArray = queue;
+        this.nArraySize = nInputSize;
     }
 
     @Override
     public void run()
     {
-           if(arr.length == 0 && arr2.length !=0){
-            qMergedArray.offer(arr2);
-            return;
-        }
-        if(arr2.length == 0 && arr.length != 0){
-            qMergedArray.offer(arr);
-            return;
-        }
-        if(arr.length != 0 && arr2.length != 0){
-       int[] mergedArray = new int[arr.length + arr2.length];
-        
-        int count = 0;
-        for (int i = 0; i < arr.length; i++) {
-            mergedArray[i] = arr[i];
-            count++;
-        }
-        for (int j = 0; j < arr2.length; j++) {
-            mergedArray[count] = arr2[j];
-            count++;
-            }
-         qMergedArray.offer(mergedArray);
-         
-        }
-        System.out.println(Arrays.toString(qMergedArray.peek()));
+        //this will allow me to still have access to the queue throughout every thread to thread N
+         qMergedArray.offer(super.insertionSort(nArray));
+         //now here I need a way to pass the Queue to something in sorting algorithms which will store th queue
+         super.ObtainTheMergedQueueFromAThread(qMergedArray);
+         System.out.println(Arrays.toString(qMergedArray.peek()));
     }
 }

@@ -14,43 +14,27 @@ import java.util.Queue;
  *
  * @author Admin
  */
-public class MergeThread implements Runnable{
+public class MergeThread extends SortingAlgorithms implements Runnable{
     private Queue<int[]> queue = new LinkedList<>();
-    private ArrayList<Integer> mergedList = new ArrayList<>();
+    private Queue<int[]> mergedList = new LinkedList<>();
+    private int[] array1;
+    private int[] array2;
+    //private int[] MergedArray;
 
-    public MergeThread(Queue<int[]> q) {
-        this.queue = q;
+    public MergeThread(int[] arr,int[] arr2,int nInputSize, int nBlockSize,Queue<int[]> queue) {
+        super(nInputSize, nBlockSize);
+        this.array1 = arr;
+        this.array2 = arr2;
+        this.mergedList = queue;
     }
+
+    
     
     @Override
     public void run() {
-        int[] array1 = queue.poll();
-        int[] array2 = queue.poll();
-           int size = array1.length + array2.length;
-        //this is the array that we will be merging the halves into
-        //int[] mergedList = new int[size];
-        //first element to consider
-        int nFirst = 0;
-        //second element to consider in the array
-        int nSecond = 0;
-        //the next open spot left in the merge array
-        int j = 0;
-        while(nFirst < array1.length && nSecond < array2.length){
-            if(array1[nFirst] < array2[nSecond]){
-                mergedList.set(j, array1[nFirst]);
-                nFirst++;
-            }
-            else{
-                mergedList.set(j,array2[nSecond]);
-                 nSecond++;
-            }
-            j++;
-        }
-        
-        System.arraycopy(array1,nFirst,mergedList.toArray(),j,array1.length - nFirst);
-        System.arraycopy(array2,nSecond,mergedList.toArray(),j,array2.length - nSecond);
-        System.out.println(mergedList.toString());
-        
+        mergedList.offer(super.MergeArray(array1, array2));
+        super.ObtainTheMergedQueueFromAThread(mergedList);
+        System.out.println(Arrays.toString(mergedList.peek()));
     }
     
 }

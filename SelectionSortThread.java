@@ -37,15 +37,14 @@ public class SelectionSortThread extends SortingAlgorithms implements Runnable
         super(nInputSize, nBlockSize);
     }
 
-    public Queue<int[]> getqMergedArray() {
-        return qMergedArray;
-    }
-
    
     @Override
     public void run()
     {
+        //this will allow me to still have access to the queue throughout every thread to thread N
          qMergedArray.offer(super.selectionSort(nArray));
+         //now here I need a way to pass the Queue to something in sorting algorithms which will store th queue
+         super.ObtainTheMergedQueueFromAThread(qMergedArray);
          System.out.println(Arrays.toString(qMergedArray.peek()));
          
          

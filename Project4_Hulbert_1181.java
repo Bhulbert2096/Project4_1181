@@ -117,7 +117,21 @@ public class Project4_Hulbert_1181 extends Application
                 
                 if(nChoice == 0){
                 nArray = sort.AlreadySorted();
-                sort.selectionSort(nArray);
+                sort.CreateSubArray(nArray);
+                try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
+                
                 }
                 if(nChoice == 1){
                     nArray = sort.ReverseOrder();
@@ -126,15 +140,34 @@ public class Project4_Hulbert_1181 extends Application
                    
                     try {
                         sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    //sort.selectionSort(nArray);
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed"+time);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 2){
                     nArray = sort.RandomArray();
-                    sort.selectionSort(nArray);
+                    sort.CreateSubArray(nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed"+time);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
             }
              if (nNum == 1)
@@ -153,15 +186,54 @@ public class Project4_Hulbert_1181 extends Application
                 
                 if(nChoice == 0){
                 nArray = sort.AlreadySorted();
-                sort.bubbleSort(nArray);
+                sort.CreateSubArray(nArray);
+                try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed"+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 1){
                     nArray = sort.ReverseOrder();
-                    sort.bubbleSort(nArray);
+                    sort.CreateSubArray(nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed"+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 2){
                     nArray = sort.RandomArray();
-                    sort.bubbleSort(nArray);
+                    sort.CreateSubArray(nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
             }
              if (nNum == 2)
@@ -180,15 +252,54 @@ public class Project4_Hulbert_1181 extends Application
                 
                 if(nChoice == 0){
                 nArray = sort.AlreadySorted();
-                sort.insertionSort(nArray);
+                sort.CreateSubArray(nArray);
+                try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 1){
                     nArray = sort.ReverseOrder();
-                    sort.insertionSort(nArray);
+                    sort.CreateSubArray(nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 2){
                     nArray = sort.RandomArray();
-                    sort.insertionSort(nArray);
+                    sort.CreateSubArray(nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
             }
              if (nNum == 3)
@@ -207,16 +318,56 @@ public class Project4_Hulbert_1181 extends Application
                 
                 if(nChoice == 0){
                 nArray = sort.AlreadySorted();
+                //NEED TO ADD sort.CreateSubArray(nArray); in here
                 sort.quicksort(0, nArray.length-1, nArray);
+                try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 1){
                     nArray = sort.ReverseOrder();
                     sort.quicksort(0, nArray.length-1, nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
                 if(nChoice == 2){
                     nArray = sort.RandomArray();
                    // sort.sort(nArray);
-                    //sort.quicksort(0, nArray.length-1, nArray);
+                    sort.quicksort(0, nArray.length-1, nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+                        
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long time = System.nanoTime();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("Time Elapsed "+time/1000000);
+                Optional<ButtonType> newResult = alert.showAndWait();
+                System.exit(0);
                 }
             }
              if(nNum == -1){
