@@ -5,8 +5,7 @@
  */
 package project4_hulbert_1181;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -19,7 +18,6 @@ public class MergeThread extends SortingAlgorithms implements Runnable{
     private Queue<int[]> mergedList = new LinkedList<>();
     private int[] array1;
     private int[] array2;
-    //private int[] MergedArray;
 
     public MergeThread(int[] arr,int[] arr2,int nInputSize, int nBlockSize,Queue<int[]> queue) {
         super(nInputSize, nBlockSize);
@@ -27,14 +25,11 @@ public class MergeThread extends SortingAlgorithms implements Runnable{
         this.array2 = arr2;
         this.mergedList = queue;
     }
-
-    
-    
-    @Override
+     @Override
     public void run() {
         mergedList.offer(super.MergeArray(array1, array2));
         super.ObtainTheMergedQueueFromAThread(mergedList);
-        System.out.println(Arrays.toString(mergedList.peek()));
+        
     }
     
 }

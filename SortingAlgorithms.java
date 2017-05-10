@@ -5,10 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-/**
- *
- * @author Admin
- */
+
 public class SortingAlgorithms {
 
     private int[] nNumberArray;
@@ -25,14 +22,12 @@ public class SortingAlgorithms {
         this.nBlockSize = nBlockSize;
     }
     public synchronized int[] selectionSort(int[] nArray) {
-       
-
         int nMin = 0;
         int temp = 0;
         for (int i = 0; i < nArray.length-1; i++)
         {
             nMin = i;
-            for (int j = i; j < nArray.length; j++)
+            for (int j = i+1; j < nArray.length; j++)
             {
                 if (nArray[j] < nArray[nMin])
                 {
@@ -74,7 +69,7 @@ public class SortingAlgorithms {
 
     public synchronized int[] bubbleSort(int[] nArray) {
 
-        int temp = 0;
+        int temp;
 
         for (int i = 0; i < nArray.length - 1; i++) {
 
@@ -90,13 +85,13 @@ public class SortingAlgorithms {
         return nArray;
     }
 
-    public synchronized void quicksort(int nLow, int nHigh, int[] nArray) {
+    public synchronized int[] quicksort(int nLow, int nHigh, int[] nArray) {
         int i = nLow;
         int k = nHigh;
         //this will give me the middle of the high and the low values
         int pivot = nArray[(nLow + nHigh) / 2];
         if (nArray.length == 0 || nArray == null) {
-            return;
+            return nArray;
         }
         //while the low is greater than or equal too the high
         while (i <= k) {
@@ -118,10 +113,10 @@ public class SortingAlgorithms {
         if (nLow < k) {
             quicksort(nLow, k, nArray);
         }
-        if (i < nHigh) {
-            quicksort(i, nHigh, nArray);
+        if (i < nHigh) { 
+           quicksort(i, nHigh, nArray);
         }
-
+       return nArray;
     }
 
     public synchronized void swap(int[] arr, int low, int high) {
@@ -134,57 +129,39 @@ public class SortingAlgorithms {
         //this is an array already sorted in ascending order
         //I am passing in the array and the inputSize
         int nNum = nInputSize;
-        int[] nArray = new int[nNum];
+        int[] arr1 = new int[nNum];
 
-        for (int i = 0; i < nArray.length; i++) {
-            nArray[i] = i;
+        for (int i = 1; i < arr1.length; i++) {
+            arr1[i] = i;
         }
-        this.nArray = nArray;
-        return nArray;
+        this.nArray = arr1;
+        return arr1;
     }
 
     //this will create an array in reverse order from nInputSize
     public int[] ReverseOrder() {
-        int[] nArray = new int[nInputSize];
+        int[] arr1 = new int[nInputSize];
         for (int i = nInputSize; i > 0; i--) {
-            nArray[(nArray.length - i)] = i;
+            arr1[(arr1.length - i)] = i;
 
         }
-        this.nArray = nArray;
-        return nArray;
+        this.nArray = arr1;
+        return arr1;
     }
 
     //this will store a random array into nArray
     public int[] RandomArray() {
         int nRandom;
-        int[] nArray = new int[nInputSize];
-        for (int i = 0; i < nArray.length; i++) {
+        int[] arr = new int[nInputSize];
+        for (int i = 0; i < arr.length; i++) {
             nRandom = (int) (0 + Math.random() * nInputSize);
-            nArray[i] = nRandom;
+            arr[i] = nRandom;
         }
-        this.nArray = nArray;
-        return nArray;
+        this.nArray = arr;
+        return arr;
     }
     
-    public synchronized void SortChunks2(int nSortingType) throws InterruptedException{
-       
-      
-        int nQueueSize = qArray.size();
-        
-        while(qArray.size() > 0){
-            switch(nSortingType){
-                case 0:
-                   Thread thread1 = new Thread(new SelectionSortThread( qArray.poll(), nInputSize, nBlockSize, qSortedArray));
-                   thread1.start();
-                   thread1.join();
-                    break;
-            }
-        }
-         System.out.println("Got here:"+Arrays.toString(qSortedArray.peek()));
-    }
-    
-   
-    public synchronized int[] MergeArray(int[] array1, int[] array2){
+     public synchronized int[] MergeArray(int[] array1, int[] array2){
         int size = array1.length + array2.length;
         //this is the array that we will be merging the halves into
         int[] mergedArray = new int[size];
@@ -224,7 +201,7 @@ public class SortingAlgorithms {
 
     public synchronized void SortChunks(int nSortingType) throws InterruptedException {
         int nNum = qArray.size();
-        int count = 0;
+       
         while (qArray.size() > 1) {
             switch (nSortingType) {
                 case 0:
@@ -297,23 +274,12 @@ public class SortingAlgorithms {
                     counter++;
 
                 }
-                //System.out.println(""+Arrays.toString(mergedArray));
                 for (int j = 0; j < arr2.length; j++) {
                     mergedArray[counter] = arr2[j];
                     counter++;
                 }
-                //System.out.println(Arrays.toString(mergedArray));
-                //qMergedArray.offer(mergedArray);
-
             }
-            //System.out.println(Arrays.toString(mergedArray));
-
         }
-        System.out.println(Arrays.toString(mergedArray));
     }
-    @Override
-    public String toString() {
-        return Arrays.toString(nNumberArray);
-    }
-
+   
 }

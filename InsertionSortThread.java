@@ -5,7 +5,7 @@
  */
 package project4_hulbert_1181;
 
-import java.util.Arrays;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -35,6 +35,6 @@ public class InsertionSortThread extends SortingAlgorithms implements Runnable
          qMergedArray.offer(super.insertionSort(nArray));
          //now here I need a way to pass the Queue to something in sorting algorithms which will store th queue
          super.ObtainTheMergedQueueFromAThread(qMergedArray);
-         System.out.println(Arrays.toString(qMergedArray.peek()));
+         
     }
 }

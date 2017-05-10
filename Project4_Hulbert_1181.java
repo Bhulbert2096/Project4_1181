@@ -1,9 +1,11 @@
 package project4_hulbert_1181;
 
+import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -24,11 +26,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- *
- * @author Admin
+ * Brandon Hulbert CS 1181 Dr.Cheathem Project 4
  */
-public class Project4_Hulbert_1181 extends Application
-{
+public class Project4_Hulbert_1181 extends Application {
 
     private final VBox mainPane = new VBox();
     private final GridPane sortPane = new GridPane();
@@ -54,13 +54,12 @@ public class Project4_Hulbert_1181 extends Application
     private int nNum = -1;
     private int nChoice = -1;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Application.launch(args);
     }
-    
-    public int SortChoice(){
-         rbSelection.setOnAction(event-> {
+
+    public int SortChoice() {
+        rbSelection.setOnAction(event -> {
             nNum = 0;
         });
         rbInsertion.setOnAction(event -> {
@@ -72,10 +71,10 @@ public class Project4_Hulbert_1181 extends Application
         rbQuick.setOnAction(event -> {
             nNum = 3;
         });
-         return nNum;
+        return nNum;
     }
-    
-    public int SortTypeChoice(){
+
+    public int SortTypeChoice() {
         rbAlreadySorted.setOnAction(event -> {
             nChoice = 0;
         });
@@ -86,319 +85,409 @@ public class Project4_Hulbert_1181 extends Application
             nChoice = 2;
         });
         return nChoice;
-    } 
-    
-    public void ButtonAction()
-    {
-       nNum = SortChoice();
-       nChoice = SortTypeChoice();
-        //have the go button start the threads
-       btGo.setOnAction(event ->
-        {
-            
-//            SortChoice();
-//            SortTypeChoice();
+    }
+
+    public void ButtonAction() {
+        nNum = SortChoice();
+        nChoice = SortTypeChoice();
+        //this wil work as a choice menue for the gui.  This will allow
+        //the program to determine what was selected and wasnt.
+        btGo.setOnAction((ActionEvent event)
+                -> {
+
             int ntext = 0;
             int nBlock = 0;
             int[] nArray = null;
-            if (nNum == 0)
-            {
-                try{
-                ntext = textFieldInput(txInput);
-                nBlock = textFieldBlock(txBlock);
-                }
-                catch(Exception e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Failed to Enter a input type");
-                   Optional<ButtonType> newResult = alert.showAndWait();
-
-                }
-                SortingAlgorithms sort = new SortingAlgorithms(ntext,nBlock);
-                
-                if(nChoice == 0){
-                nArray = sort.AlreadySorted();
-                sort.CreateSubArray(nArray);
+            //this is selection sort button
+            if (nNum == 0) {
+                boolean DidntthrewException = false;
+                //this will test if the two blocks have input in them
                 try {
-                        sort.SortChunks(nNum);
-                        sort.MergeThreadQueue(nNum);
-                        
+                    ntext = textFieldInput(txInput);
+                    nBlock = textFieldBlock(txBlock);
+                    if (ntext < nBlock) {
+                        throw new InputMismatchException();
                     }
-                    catch (InterruptedException ex) {
-                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    if (ntext <= 0 || nBlock <= 0) {
+                        throw new NegativeInputException();
                     }
-                long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
-                
                 }
-                if(nChoice == 1){
-                    nArray = sort.ReverseOrder();
+                catch (InputMismatchException e) {
+                    DidntthrewException = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Block size cannot be greater than the input size");
+                    alert.show();
+                }
+                catch (NegativeInputException ex) {
+                    DidntthrewException = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Block size and input size both cannot be negative");
+                    alert.show();
+                }
+                if (!DidntthrewException) {
+                    SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
+                    //this is an already sorted array
+                    if (nChoice == 0) {
+                        long start = System.nanoTime();
+                        nArray = sort.AlreadySorted();
+                        sort.CreateSubArray(nArray);
+                        try {
+                            sort.SortChunks(nNum);
+                            sort.MergeThreadQueue(nNum);
+
+                        }
+                        catch (InterruptedException ex) {
+                            Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        long end = System.nanoTime();
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                        Optional<ButtonType> newResult = alert.showAndWait();
+                        //System.exit(0);
+
+                    }
+                    //this is a reverse ordered array
+                    if (nChoice == 1) {
+                        long start = System.nanoTime();
+                        nArray = sort.ReverseOrder();
+                        sort.CreateSubArray(nArray);
+
+                        try {
+                            sort.SortChunks(nNum);
+                            sort.MergeThreadQueue(nNum);
+
+                        }
+                        catch (InterruptedException ex) {
+                            Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        long end = System.nanoTime();
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                        Optional<ButtonType> newResult = alert.showAndWait();
+                        //System.exit(0);
+                       
+                    }
+                    //this is a random array
+                    if (nChoice == 2) {
+                        long start = System.nanoTime();
+                        nArray = sort.RandomArray();
+                        sort.CreateSubArray(nArray);
+                        try {
+                            sort.SortChunks(nNum);
+                            sort.MergeThreadQueue(nNum);
+
+                        }
+                        catch (InterruptedException ex) {
+                            Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        long end = System.nanoTime();
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                        Optional<ButtonType> newResult = alert.showAndWait();
+                       // System.exit(0);
+                    }
+                }
+            }
+            if (nNum == 1) {
+                boolean DidntthrewException = false;
+                //this will test if the two blocks have input in them
+                try {
+                    ntext = textFieldInput(txInput);
+                    nBlock = textFieldBlock(txBlock);
+                    if (ntext < nBlock) {
+                        throw new InputMismatchException();
+                    }
+                    if (ntext <= 0 || nBlock <= 0) {
+                        throw new NegativeInputException();
+                    }
+                }
+
+                catch (InputMismatchException e) {
+                    DidntthrewException = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Block size cannot be greater than the input size");
+                    alert.show();
+
+                    //Optional<ButtonType> newResult = alert.showAndWait();
+                }
+                catch (NegativeInputException ex) {
+                    DidntthrewException = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Block size and input size both cannot be negative");
+                    alert.show();
+                }
+
+                SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
+
+                if (nChoice == 0) {
+                    long start = System.nanoTime();
+                    nArray = sort.AlreadySorted();
                     sort.CreateSubArray(nArray);
-                    
-                   
                     try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed"+time);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                    //System.exit(0);
                 }
-                if(nChoice == 2){
+                if (nChoice == 1) {
+                    long start = System.nanoTime();
+                    nArray = sort.ReverseOrder();
+                    sort.CreateSubArray(nArray);
+                    try {
+                        sort.SortChunks(nNum);
+                        sort.MergeThreadQueue(nNum);
+
+                    }
+                    catch (InterruptedException ex) {
+                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                    //System.exit(0);
+                }
+                if (nChoice == 2) {
+                    long start = System.nanoTime();
                     nArray = sort.RandomArray();
                     sort.CreateSubArray(nArray);
                     try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed"+time);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                    //System.exit(0);
                 }
             }
-             if (nNum == 1)
-            {
-                try{
-                ntext = textFieldInput(txInput);
-                nBlock = textFieldBlock(txBlock);
+            if (nNum == 2) {
+                boolean DidntthrewException = false;
+                //this will test if the two blocks have input in them
+                try {
+                    ntext = textFieldInput(txInput);
+                    nBlock = textFieldBlock(txBlock);
+                    if (ntext < nBlock) {
+                        throw new InputMismatchException();
+                    }
+                    if (ntext <= 0 || nBlock <= 0) {
+                        throw new NegativeInputException();
+                    }
                 }
-                catch(Exception e){
+                catch (InputMismatchException e) {
+                    DidntthrewException = true;
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Failed to Enter a input type");
-                   Optional<ButtonType> newResult = alert.showAndWait();
+                    alert.setContentText("Block size cannot be greater than the input size");
+                    alert.show();
 
+                    //Optional<ButtonType> newResult = alert.showAndWait();
+                }
+                catch (NegativeInputException ex) {
+                    DidntthrewException = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Block size and input size both cannot be negative");
+                    alert.show();
                 }
                 SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
-                
-                if(nChoice == 0){
-                nArray = sort.AlreadySorted();
-                sort.CreateSubArray(nArray);
-                try {
+
+                if (nChoice == 0) {
+                    long start = System.nanoTime();
+                    nArray = sort.AlreadySorted();
+                    sort.CreateSubArray(nArray);
+                    try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed"+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                    //System.exit(0);
                 }
-                if(nChoice == 1){
+                if (nChoice == 1) {
+                    long start = System.nanoTime();
                     nArray = sort.ReverseOrder();
                     sort.CreateSubArray(nArray);
                     try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed"+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                   // System.exit(0);
                 }
-                if(nChoice == 2){
+                if (nChoice == 2) {
+                    long start = System.nanoTime();
                     nArray = sort.RandomArray();
                     sort.CreateSubArray(nArray);
                     try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                    //System.exit(0);
                 }
             }
-             if (nNum == 2)
-            {
-                try{
-                ntext = textFieldInput(txInput);
-                nBlock = textFieldBlock(txBlock);
+            if (nNum == 3) {
+                boolean DidntthrewException = false;
+                //this will test if the two blocks have input in them
+                try {
+                    ntext = textFieldInput(txInput);
+                    nBlock = textFieldBlock(txBlock);
+                    if (ntext < nBlock) {
+                        throw new InputMismatchException();
+                    }
+                    if (ntext <= 0 || nBlock <= 0) {
+                        throw new NegativeInputException();
+                    }
                 }
-                catch(Exception e){
+                catch (InputMismatchException e) {
+                    DidntthrewException = true;
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Failed to Enter a input type");
-                   Optional<ButtonType> newResult = alert.showAndWait();
+                    alert.setContentText("Block size cannot be greater than the input size");
+                    alert.show();
 
+                    //Optional<ButtonType> newResult = alert.showAndWait();
                 }
+                catch (NegativeInputException ex) {
+                    DidntthrewException = true;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Block size and input size both cannot be negative");
+                    alert.show();
+                }
+
                 SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
-                
-                if(nChoice == 0){
-                nArray = sort.AlreadySorted();
-                sort.CreateSubArray(nArray);
-                try {
+
+                if (nChoice == 0) {
+                    long start = System.nanoTime();
+                    nArray = sort.AlreadySorted();
+                    sort.CreateSubArray(nArray);
+                    try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                   // System.exit(0);
                 }
-                if(nChoice == 1){
+                if (nChoice == 1) {
+                    long start = System.nanoTime();
                     nArray = sort.ReverseOrder();
                     sort.CreateSubArray(nArray);
                     try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                    //System.exit(0);
                 }
-                if(nChoice == 2){
+                if (nChoice == 2) {
+                    long start = System.nanoTime();
                     nArray = sort.RandomArray();
                     sort.CreateSubArray(nArray);
                     try {
                         sort.SortChunks(nNum);
                         sort.MergeThreadQueue(nNum);
-                        
+
                     }
                     catch (InterruptedException ex) {
                         Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
+                    long end = System.nanoTime();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Sort completed in " + (end - start) / 1000000 + " ms");
+                    Optional<ButtonType> newResult = alert.showAndWait();
+                   // System.exit(0);
                 }
             }
-             if (nNum == 3)
-            {
-                try{
-                ntext = textFieldInput(txInput);
-                nBlock = textFieldBlock(txBlock);
-                }
-                catch(Exception e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Failed to Enter a input type");
-                   Optional<ButtonType> newResult = alert.showAndWait();
+            if (nNum == -1) {
 
-                }
-                SortingAlgorithms sort = new SortingAlgorithms(ntext, nBlock);
-                
-                if(nChoice == 0){
-                nArray = sort.AlreadySorted();
-                //NEED TO ADD sort.CreateSubArray(nArray); in here
-                sort.quicksort(0, nArray.length-1, nArray);
-                try {
-                        sort.SortChunks(nNum);
-                        sort.MergeThreadQueue(nNum);
-                        
-                    }
-                    catch (InterruptedException ex) {
-                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Failed to select all the buttons");
                 Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
-                }
-                if(nChoice == 1){
-                    nArray = sort.ReverseOrder();
-                    sort.quicksort(0, nArray.length-1, nArray);
-                    try {
-                        sort.SortChunks(nNum);
-                        sort.MergeThreadQueue(nNum);
-                        
-                    }
-                    catch (InterruptedException ex) {
-                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
-                }
-                if(nChoice == 2){
-                    nArray = sort.RandomArray();
-                   // sort.sort(nArray);
-                    sort.quicksort(0, nArray.length-1, nArray);
-                    try {
-                        sort.SortChunks(nNum);
-                        sort.MergeThreadQueue(nNum);
-                        
-                    }
-                    catch (InterruptedException ex) {
-                        Logger.getLogger(Project4_Hulbert_1181.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    long time = System.nanoTime();
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Time Elapsed "+time/1000000);
-                Optional<ButtonType> newResult = alert.showAndWait();
-                System.exit(0);
-                }
+
             }
-             if(nNum == -1){
-               
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setContentText("Failed to select all the buttons");
-                   Optional<ButtonType> newResult = alert.showAndWait();
+            if (nChoice == -1) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Failed to select all the buttons");
+                Optional<ButtonType> newResult = alert.showAndWait();
+            }
 
-                }
-             
-             
-             
         });
 
     }
 
-    public int textFieldInput(TextField Input)
-    {
+    public int textFieldInput(TextField Input) {
+        int nInput = 0;
+        try{
         String input = txInput.getText();
-        int nInput = Integer.parseInt(input);
+        nInput = Integer.parseInt(input);
+        }catch(NumberFormatException e){
+         Alert alert = new Alert(Alert.AlertType.ERROR);
+         alert.setContentText("NonInteger entered");
+            alert.show();
+        }
         return nInput;
     }
-    public int textFieldBlock(TextField Block){
+
+    public int textFieldBlock(TextField Block) {
+        int nBlock = 0;
         String block = txBlock.getText();
-        int nBlock = Integer.parseInt(block);
+        try{
+        nBlock = Integer.parseInt(block);
+         }catch(NumberFormatException e){
+         Alert alert = new Alert(Alert.AlertType.ERROR);
+         alert.setContentText("NonInteger entered");
+            alert.show();
+        }
         return nBlock;
     }
 
     @Override
-    public void start(Stage stage) throws Exception
-    {
+    public void start(Stage stage) throws Exception {
 
         rbBubble.setToggleGroup(group);
         rbInsertion.setToggleGroup(group);
@@ -438,9 +527,7 @@ public class Project4_Hulbert_1181 extends Application
         ButtonPane.add(btGo, 0, 0);
         ButtonPane.setPadding(new Insets(10, 10, 10, 10));
 
-        
         ButtonAction();
-
 
         mainPane.getChildren().addAll(sortPane);
         mainPane.getChildren().addAll(inputPane);

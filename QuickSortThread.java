@@ -5,14 +5,10 @@
  */
 package project4_hulbert_1181;
 
-import java.util.Arrays;
+
 import java.util.LinkedList;
 import java.util.Queue;
 
-/**
- *
- * @author Admin
- */
 public class QuickSortThread extends SortingAlgorithms implements Runnable
 {
      private int[] nArray;
@@ -32,10 +28,10 @@ public class QuickSortThread extends SortingAlgorithms implements Runnable
     public void run()
     {
      //this will allow me to still have access to the queue throughout every thread to thread N
-         qMergedArray.offer(super.QuickSort(nArray));
+         qMergedArray.offer(super.quicksort(0,nArray.length-1,nArray));
          //now here I need a way to pass the Queue to something in sorting algorithms which will store th queue
          super.ObtainTheMergedQueueFromAThread(qMergedArray);
-         System.out.println(Arrays.toString(qMergedArray.peek()));
+         
     }
     
 }
